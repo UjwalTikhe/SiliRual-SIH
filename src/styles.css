@@ -984,6 +984,52 @@ textarea:focus-visible {
   font-size: 0.56em;
 }
 
+/* Mobile App Mode Styles */
+html {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* PWA Install Prompt Styles */
+.pwa-install-prompt {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 1000;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 20px color-mix(in oklab, var(--foreground) 20%, transparent);
+}
+
+.pwa-install-prompt button {
+  background: var(--primary-foreground);
+  color: var(--primary);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pwa-install-prompt .dismiss {
+  background: transparent;
+  color: var(--primary-foreground);
+  padding: 8px;
+}
+
 /* Modern Dashboard Styles */
 .modern-header {
   padding: 20px 16px;

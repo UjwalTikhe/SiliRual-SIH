@@ -12,6 +12,20 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
+// PWA Service Worker Registration
+if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").then(
+      (registration) => {
+        console.log("SW registered: ", registration);
+      },
+      (registrationError) => {
+        console.log("SW registration failed: ", registrationError);
+      }
+    );
+  });
+}
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -76,11 +90,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "SILIRUAL" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" },
+      { title: "SiliRual - Elderly Care Companion" },
       { name: "description", content: "Accessible everyday support for elders and caregivers." },
-      { name: "author", content: "SILIRUAL" },
-      { property: "og:title", content: "SILIRUAL" },
+      { name: "author", content: "SiliRual" },
+      { name: "theme-color", content: "#6A5ACD" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      { name: "apple-mobile-web-app-title", content: "SiliRual" },
+      { property: "og:title", content: "SiliRual - Elderly Care Companion" },
       {
         property: "og:description",
         content: "Accessible everyday support for elders and caregivers.",
@@ -97,6 +115,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap",
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/favicon.png" },
+      { rel: "manifest", href: "/manifest.json" },
     ],
   }),
   shellComponent: RootShell,
