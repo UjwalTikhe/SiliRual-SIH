@@ -7,12 +7,12 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
-// PWA Service Worker Registration
+// PWA Service Worker Registration and Offline Status
 if (typeof window !== "undefined" && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     // Use the auto-generated service worker from vite-plugin-pwa
@@ -20,12 +20,80 @@ if (typeof window !== "undefined" && "serviceWorker" in navigator) {
     navigator.serviceWorker.register(swUrl).then(
       (registration) => {
         console.log("SW registered: ", registration);
+        
+        // Check for service worker updates
+        registration.addEventListener("updatefound", () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener("statechange", () => {
+              if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                // New version available
+                if (window.confirm("New version available! Reload to update?")) {
+                  window.location.reload();
+                }
+              }
+            });
+          }
+        });
       },
       (registrationError) => {
         console.log("SW registration failed: ", registrationError);
       }
     );
   });
+}
+
+// Offline Status Hook
+function useOnlineStatus() {
+  const [isOnline, setIsOnline] = useState(
+    typeof window !== "undefined" ? navigator.onLine : true
+  );
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  return isOnline;
+}
+
+// Offline Indicator Component
+function OfflineIndicator() {
+  const isOnline = useOnlineStatus();
+
+  if (isOnline) return null;
+
+  return (
+    <div style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "#f59e0b",
+      color: "#ffffff",
+      padding: "12px 16px",
+      textAlign: "center",
+      zIndex: 9999,
+      fontSize: "14px",
+      fontWeight: "600",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "8px"
+    }}>
+      <span>📡</span>
+      <span>You're offline - Using cached content</span>
+    </div>
+  );
 }
 
 function NotFoundComponent() {
@@ -94,7 +162,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" },
       { title: "SiliRual - Elderly Care Companion" },
-      { name: "description", content: "Accessible everyday support for elders and caregivers." },
+      { name: "description", content: "Accessible everyday support for elders and caregivers. Works offline for reliable access anywhere, anytime." },
       { name: "author", content: "SiliRual" },
       { name: "theme-color", content: "#6A5ACD" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
@@ -135,6 +203,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <OfflineIndicator />
         {children}
         <Scripts />
       </body>

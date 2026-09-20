@@ -21,7 +21,7 @@ export default defineConfig({
         manifest: {
           name: "SiliRual - Elderly Care Companion",
           short_name: "SiliRual",
-          description: "A government initiative to support memory and cognitive wellness for elderly citizens",
+          description: "A government initiative to support memory and cognitive wellness for elderly citizens. Works offline for reliable access anywhere.",
           theme_color: "#6A5ACD",
           background_color: "#ffffff",
           display: "standalone",
@@ -109,13 +109,62 @@ export default defineConfig({
               }
             },
             {
+              urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "gstatic-fonts-cache",
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            },
+            {
               urlPattern: /\.(?:png|jpg|jpeg|svg|webp|ico)$/i,
               handler: "CacheFirst",
               options: {
                 cacheName: "image-cache",
                 expiration: {
-                  maxEntries: 60,
+                  maxEntries: 100,
                   maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+                }
+              }
+            },
+            {
+              urlPattern: /\.(?:js|css)$/i,
+              handler: "StaleWhileRevalidate",
+              options: {
+                cacheName: "static-resources-cache",
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
+                }
+              }
+            },
+            {
+              urlPattern: /\/api\/.*/i,
+              handler: "NetworkFirst",
+              options: {
+                cacheName: "api-cache",
+                networkTimeoutSeconds: 10,
+                expiration: {
+                  maxEntries: 20,
+                  maxAgeSeconds: 60 * 60 * 24 // 1 day
+                }
+              }
+            },
+            {
+              urlPattern: /^https:\/\/.*/i,
+              handler: "NetworkFirst",
+              options: {
+                cacheName: "offline-fallback",
+                networkTimeoutSeconds: 3,
+                expiration: {
+                  maxEntries: 30,
+                  maxAgeSeconds: 60 * 60 * 24 * 2 // 2 days
                 }
               }
             }
