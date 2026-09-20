@@ -17,7 +17,7 @@ export default defineConfig({
     plugins: [
       VitePWA({
         registerType: "autoUpdate",
-        includeAssets: ["favicon.png", "robots.txt"],
+        includeAssets: ["favicon.png", "favicon.ico", "robots.txt"],
         manifest: {
           name: "SiliRual - Elderly Care Companion",
           short_name: "SiliRual",
@@ -26,6 +26,8 @@ export default defineConfig({
           background_color: "#ffffff",
           display: "standalone",
           orientation: "portrait",
+          start_url: "/",
+          scope: "/",
           icons: [
             {
               src: "/icons/icon-72x72.png",
@@ -86,6 +88,36 @@ export default defineConfig({
               sizes: "512x512",
               type: "image/png",
               purpose: "maskable"
+            }
+          ]
+        },
+        workbox: {
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,webp}"],
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "google-fonts-cache",
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            },
+            {
+              urlPattern: /\.(?:png|jpg|jpeg|svg|webp|ico)$/i,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "image-cache",
+                expiration: {
+                  maxEntries: 60,
+                  maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+                }
+              }
             }
           ]
         }

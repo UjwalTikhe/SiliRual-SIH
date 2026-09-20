@@ -15,7 +15,9 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 // PWA Service Worker Registration
 if (typeof window !== "undefined" && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").then(
+    // Use the auto-generated service worker from vite-plugin-pwa
+    const swUrl = `${window.location.origin}/sw.js`;
+    navigator.serviceWorker.register(swUrl).then(
       (registration) => {
         console.log("SW registered: ", registration);
       },
