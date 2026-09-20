@@ -43,6 +43,16 @@ if (typeof window !== "undefined" && "serviceWorker" in navigator) {
   });
 }
 
+// Add PWA install prompt handler
+let deferredPrompt: any;
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeinstallprompt", (e: any) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log("PWA install prompt available");
+  });
+}
+
 // Offline Status Hook
 function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(
