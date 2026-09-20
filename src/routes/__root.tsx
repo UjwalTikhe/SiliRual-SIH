@@ -11,6 +11,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { PWAInstallButton } from "../components/PWAInstallButton";
 
 // PWA Service Worker Registration and Offline Status
 if (typeof window !== "undefined" && "serviceWorker" in navigator) {
@@ -40,22 +41,6 @@ if (typeof window !== "undefined" && "serviceWorker" in navigator) {
         console.log("SW registration failed: ", registrationError);
       }
     );
-  });
-}
-
-// Add PWA install prompt handler
-let deferredPrompt: any;
-if (typeof window !== "undefined") {
-  window.addEventListener("beforeinstallprompt", (e: any) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    console.log("PWA install prompt available");
-  });
-  
-  // Listen for app installed event
-  window.addEventListener("appinstalled", () => {
-    console.log("PWA was installed");
-    deferredPrompt = null;
   });
 }
 
@@ -220,6 +205,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         <OfflineIndicator />
+        <PWAInstallButton />
         {children}
         <Scripts />
       </body>
