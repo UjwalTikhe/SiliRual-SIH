@@ -18,6 +18,8 @@ export default defineConfig({
       VitePWA({
         registerType: "autoUpdate",
         includeAssets: ["favicon.png", "favicon.ico", "robots.txt"],
+        filename: "sw.js",
+        strategies: "generateSW",
         manifest: {
           name: "SiliRual - Elderly Care Companion",
           short_name: "SiliRual",

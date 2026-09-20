@@ -51,6 +51,12 @@ if (typeof window !== "undefined") {
     deferredPrompt = e;
     console.log("PWA install prompt available");
   });
+  
+  // Listen for app installed event
+  window.addEventListener("appinstalled", () => {
+    console.log("PWA was installed");
+    deferredPrompt = null;
+  });
 }
 
 // Offline Status Hook
