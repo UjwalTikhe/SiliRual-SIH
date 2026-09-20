@@ -10,6 +10,7 @@ import {
   Check,
   ChevronRight,
   CircleHelp,
+  Clock,
   Clock3,
   Cloud,
   CloudOff,
@@ -3784,17 +3785,32 @@ function TodayView({
   onGame: (gameName: string) => void;
   reminderCount: number;
 }) {
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const moods = [
+    { emoji: "😊", label: "Happy" },
+    { emoji: "😌", label: "Calm" },
+    { emoji: "🙂", label: "Okay" },
+    { emoji: "😴", label: "Tired" },
+  ];
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "GOOD MORNING";
+    if (hour < 17) return "GOOD AFTERNOON";
+    return "GOOD EVENING";
+  };
+
   return (
     <>
-      <PageHeader
-        title={`Namaste, ${name}`}
-        subtitle={new Date().toLocaleDateString(undefined, {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        })}
-        action={
+      {/* Top Header Section */}
+      <div className="modern-header">
+        <div className="header-top">
+          <div className="greeting-section">
+            <span className="greeting-label">{getGreeting()}</span>
+            <div className="sun-icon">
+              <Sun size={24} />
+            </div>
+          </div>
           <button
             className="avatar-button"
             onClick={() => navigate("settings")}
@@ -3802,27 +3818,60 @@ function TodayView({
           >
             {name[0]?.toUpperCase()}
           </button>
-        }
-      />
-      <section className="feature-activity">
-        <div>
+        </div>
+        <div className="user-greeting">
+          <h1>Namaste, {name} 🙏</h1>
+          <p className="date-text">
+            {new Date().toLocaleDateString(undefined, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+        </div>
+      </div>
+
+      {/* Mood Check Section */}
+      <section className="mood-section">
+        <div className="mood-card">
+          <h2>How are you feeling?</h2>
+          <div className="mood-grid">
+            {moods.map((mood) => (
+              <button
+                key={mood.label}
+                className={`mood-button ${selectedMood === mood.label ? "mood-selected" : ""}`}
+                onClick={() => setSelectedMood(mood.label)}
+              >
+                <span className="mood-emoji">{mood.emoji}</span>
+                <span className="mood-label">{mood.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* Today's Activity Section */}
+      <section className="activity-section">
+        <div className="feature-activity modern-activity-card">
+          <div className="activity-content">
           <span className="section-label">
             <Sun /> Today’s activity
           </span>
-          <h2>Find the matching pictures</h2>
-          <p>A calm 5-minute activity to enjoy at your own pace.</p>
-          <ActionButton variant="warm" onClick={() => onGame("Picture Pairs")}>
-            <Play /> Start activity
-          </ActionButton>
+            <h2>Find the matching pictures</h2>
+            <p>A calm 5-minute activity to enjoy at your own pace.</p>
+            <ActionButton variant="warm" onClick={() => onGame("Picture Pairs")}>
+              <Play /> Start Activity
+            </ActionButton>
+          </div>
+          <span className="feature-illustration">
+            <Flower2 />
+          </span>
         </div>
-        <span className="feature-illustration">
-          <Flower2 />
-        </span>
       </section>
       <section>
         <div className="section-heading">
           <h2>Also for today</h2>
-          <button onClick={() => navigate("games")}>See all</button>
+          <button onClick={() => navigate("games")}>See all →</button>
         </div>
         <div className="mini-grid">
           <button className="mini-card" onClick={() => navigate("games")}>
@@ -5318,222 +5367,230 @@ function HelperApp({ role, onLogout }: { role: "family" | "caregiver"; onLogout:
 
     return (
       <>
-        <PageHeader
-          title={caregiver ? "Caregiver Dashboard" : "Family Dashboard"}
-          subtitle="Tuesday, 15 September 2026"
-          action={
-            <button className="icon-button">
-              <Menu />
-            </button>
-          }
-        />
+        {!caregiver && (
+          <>
+            <PageHeader
+              title="Family Dashboard"
+              subtitle="Tuesday, 15 September 2026"
+              action={
+                <button className="icon-button">
+                  <Menu />
+                </button>
+              }
+            />
+          </>
+        )}
 
         {/* Dashboard Overview for Caregivers */}
         {caregiver && (
           <>
-            <section className="dashboard-overview">
-              <div className="stats-grid">
+            {/* Modern Caregiver Header */}
+            <div className="caregiver-header">
+              <div className="caregiver-header-top">
+                <span className="caregiver-title">CAREGIVER DASHBOARD</span>
+                <button className="icon-button" style={{ background: 'transparent', border: 'none', color: 'white' }}>
+                  <Settings />
+                </button>
+              </div>
+              <h1 className="caregiver-greeting">Good Morning</h1>
+              <div className="stats-row">
                 <div className="stat-card">
-                  <span className="stat-icon">
-                    <Users />
-                  </span>
-                  <div>
-                    <strong>{eldersUnderCare.length}</strong>
-                    <small>Elders under care</small>
-                  </div>
+                  <span className="stat-number">{eldersUnderCare.length}</span>
+                  <span className="stat-label">Elders</span>
                 </div>
                 <div className="stat-card">
-                  <span className="stat-icon">
-                    <Bell />
-                  </span>
-                  <div>
-                    <strong>{alerts.length}</strong>
-                    <small>Active alerts</small>
-                  </div>
+                  <span className="stat-number">{alerts.length}</span>
+                  <span className="stat-label">Alerts</span>
                 </div>
                 <div className="stat-card">
-                  <span className="stat-icon">
-                    <BookOpen />
-                  </span>
-                  <div>
-                    <strong>{careTasks.filter((t) => t.status !== "completed").length}</strong>
-                    <small>Pending tasks</small>
-                  </div>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-icon">
-                    <HeartHandshake />
-                  </span>
-                  <div>
-                    <strong>
-                      {healthData.filter((h) => h.status === "normal").length}/{healthData.length}
-                    </strong>
-                    <small>Normal vitals</small>
-                  </div>
+                  <span className="stat-number">1/5</span>
+                  <span className="stat-label">Tasks Done</span>
                 </div>
               </div>
+            </div>
 
-              {/* Active Alerts */}
-              {alerts.length > 0 && (
-                <section className="alerts-section">
-                  <h2>Active Alerts</h2>
-                  {alerts.map((alert) => (
-                    <div
-                      key={alert.id}
-                      className={cn(
-                        "alert-card",
-                        alert.type === "urgent" ? "alert-urgent" : "alert-warning",
-                      )}
-                    >
-                      <span className="alert-icon">
-                        {alert.type === "urgent" ? <Bell /> : <CircleHelp />}
-                      </span>
-                      <div>
-                        <strong>{alert.elder}</strong>
-                        <p>{alert.message}</p>
-                        <small>{alert.time}</small>
-                      </div>
-                      <button className="alert-action">Resolve</button>
-                    </div>
-                  ))}
-                </section>
-              )}
-
-              {/* Analytics Overview */}
-              <section className="analytics-section">
-                <h2>
-                  <TrendingUp /> Elder Progress Analytics
-                </h2>
-                <div
-                  className="analytics-grid"
-                  style={{ display: "flex", overflowX: "auto", gap: "12px", paddingBottom: "8px" }}
-                >
-                  <div className="analytics-card">
-                    <h3>
-                      <BarChart3 /> Weekly Activity
-                    </h3>
-                    <div className="chart-container">
-                      {analyticsData.activityEngagement.map((data, i) => (
-                        <div
-                          key={i}
-                          className={cn("bar", data.improvement ? "improvement" : "decline")}
-                          style={{ height: `${data.value}%` }}
-                        />
-                      ))}
-                    </div>
-                    <div className="analytics-stats">
-                      <div className="analytics-stat">
-                        <strong>85%</strong>
-                        <small>Avg engagement</small>
-                      </div>
-                      <div className="analytics-stat">
-                        <strong>+12%</strong>
-                        <small>Improvement</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="analytics-card">
-                    <h3>
-                      <PieChart /> Health Trends
-                    </h3>
-                    <div className="analytics-stats">
-                      {analyticsData.healthTrends.map((trend, i) => (
-                        <div key={i} className="analytics-stat">
-                          <strong>{trend.current}</strong>
-                          <small>{trend.metric}</small>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+            {/* Urgent Alerts */}
+            {alerts.length > 0 && (
+              <section className="alerts-section">
+                <div className="section-heading">
+                  <h2>Urgent Alerts</h2>
+                  <button>View all →</button>
                 </div>
-              </section>
-
-              {/* Quick Elder Status */}
-              <section className="elder-status-grid">
-                <h2>Elder Status · বৃদ্ধ স্থিতি</h2>
-                {eldersUnderCare.map((elder) => (
+                {alerts.map((alert) => (
                   <div
-                    key={elder.id}
-                    className="elder-status-card"
-                    onClick={() => setView("elders")}
+                    key={alert.id}
+                    className={cn(
+                      "alert-card",
+                      alert.type === "urgent" ? "urgent" : "warning",
+                    )}
                   >
-                    <div>
-                      <strong>{elder.name}</strong>
-                      <small>
-                        {elder.status} · {elder.lastActive}
-                      </small>
+                    <div className={cn("alert-icon", alert.type === "urgent" ? "urgent" : "warning")}>
+                      {alert.type === "urgent" ? <Bell /> : <CircleHelp />}
                     </div>
-                    <span
-                      className={cn(
-                        "status-dot",
-                        elder.status === "Well"
-                          ? "status-green"
-                          : elder.status === "Needs attention"
-                            ? "status-red"
-                            : "status-yellow",
-                      )}
-                    />
+                    <div className="alert-content">
+                      <p className="alert-title">{alert.elder}</p>
+                      <p className="alert-message">{alert.message}</p>
+                      <p className="alert-time">{alert.time}</p>
+                    </div>
+                    <ChevronRight />
                   </div>
                 ))}
               </section>
+            )}
+
+            {/* Elders Under Care */}
+            <section className="elders-section">
+              <div className="section-heading">
+                <h2>Elders Under Care</h2>
+                <button>Details →</button>
+              </div>
+              {eldersUnderCare.map((elder) => (
+                <div key={elder.id} className="elder-card">
+                  <div className="elder-avatar">{elder.name[0]}</div>
+                  <div className="elder-info">
+                    <p className="elder-name">{elder.name}</p>
+                    <p className="elder-details">{elder.age} yrs · {elder.location}</p>
+                    <span className="elder-status">{elder.status}</span>
+                  </div>
+                  <p className="elder-time">{elder.lastActive}</p>
+                </div>
+              ))}
             </section>
           </>
         )}
 
         {/* Family Dashboard Summary */}
         {!caregiver && (
-          <section className="family-summary">
-            <div>
-              <small>Currently supporting</small>
-              <h2>Anima Das</h2>
-              <span>
-                <Check /> Connected securely
-              </span>
+          <>
+            {/* Modern Family Header */}
+            <div className="family-header">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <h1 className="family-title">Family Circle</h1>
+                  <p className="family-subtitle">Staying connected with Anima Das</p>
+                </div>
+                <button className="call-button">
+                  <Phone />
+                </button>
+              </div>
             </div>
-            <ChevronRight />
-          </section>
+
+            {/* Profile Card */}
+            <div className="profile-main-card">
+              <div className="profile-header">
+                <div className="profile-avatar-large">A</div>
+                <div className="profile-name-section">
+                  <h2>Anima Das</h2>
+                  <p className="profile-age">78 yrs</p>
+                  <div className="profile-status">
+                    <Check size={16} /> Active 12m ago
+                  </div>
+                  <div className="profile-location">
+                    <MapPin size={14} /> Home Shillong
+                  </div>
+                </div>
+              </div>
+
+              {/* Activity Summary */}
+              <div className="activity-summary">
+                <div className="summary-card">
+                  <div className="summary-icon">💕</div>
+                  <p className="summary-label">TODAY'S MOOD</p>
+                  <p className="summary-value">Peaceful</p>
+                </div>
+                <div className="summary-card">
+                  <div className="summary-icon">☀️</div>
+                  <p className="summary-label">ACTIVITIES</p>
+                  <p className="summary-value">2 of 3 done</p>
+                </div>
+                <div className="summary-card">
+                  <div className="summary-icon">📞</div>
+                  <p className="summary-label">PHONE TIME</p>
+                  <p className="summary-value">84% normal</p>
+                </div>
+              </div>
+
+              {/* Voice Note Section */}
+              <div className="voice-note-section">
+                <span>💕</span>
+                <p className="voice-note-text">Send Anima a warm morning voice note...</p>
+                <button className="send-love-button">
+                  Send Love <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+
+            {/* Today's Schedule */}
+            <div className="schedule-section">
+              <div className="section-heading">
+                <h2>TODAY'S SCHEDULE</h2>
+                <button>Manage Plan</button>
+              </div>
+              
+              <div className="schedule-item completed">
+                <p className="schedule-time">
+                  <Check size={14} /> 8:30 AM Completed
+                </p>
+                <p className="schedule-title">Morning Walk & Herbal Tea</p>
+                <p className="schedule-desc">Completed on time at Nehru Park</p>
+              </div>
+
+              <div className="schedule-item upcoming">
+                <p className="schedule-time">
+                  <Clock size={14} /> Upcoming 1:30 PM
+                </p>
+                <p className="schedule-title">Afternoon Memory Game & Rest</p>
+                <p className="schedule-desc">Picture Pairs activity scheduled</p>
+              </div>
+            </div>
+          </>
         )}
 
-        <h2 className="dashboard-title">What would you like to do? · আপনি কী করতে চান?</h2>
-        <div className="dashboard-grid">
-          {items.map((item) => (
-            <button key={item.id} onClick={() => setView(item.id)}>
-              <IconBadge tone={item.tone}>{item.i}</IconBadge>
-              <strong>{item.t}</strong>
-              <small>{item.d}</small>
-              <ChevronRight />
-            </button>
-          ))}
-        </div>
-        <div className="official-note">
-          <ShieldCheck />
-          <div>
-            <strong>Private and permission-based</strong>
-            <p>Elders control what you can see and manage.</p>
-          </div>
-        </div>
-        <div className="cultural-note">
-          <div className="cultural-icon">🌺</div>
-          <div>
-            <strong>North East India Initiative</strong>
-            <p>
-              Specially designed for the diverse communities of North East India, respecting local
-              traditions and languages.
-            </p>
-          </div>
-        </div>
-        <div className="medical-disclaimer">
-          <div className="disclaimer-icon">⚕️</div>
-          <div>
-            <strong>Medical Disclaimer</strong>
-            <p>
-              This application provides cognitive support activities and is not a substitute for
-              professional medical diagnosis, treatment, or advice. Always consult qualified
-              healthcare professionals for medical concerns. Emergency services: Call 104 for health
-              emergencies.
-            </p>
-          </div>
-        </div>
+        {/* Action Menu - Only for Family view */}
+        {!caregiver && (
+          <>
+            <h2 className="dashboard-title">What would you like to do? · আপনি কী করতে চান?</h2>
+            <div className="dashboard-grid">
+              {items.map((item) => (
+                <button key={item.id} onClick={() => setView(item.id)}>
+                  <IconBadge tone={item.tone}>{item.i}</IconBadge>
+                  <strong>{item.t}</strong>
+                  <small>{item.d}</small>
+                  <ChevronRight />
+                </button>
+              ))}
+            </div>
+            <div className="official-note">
+              <ShieldCheck />
+              <div>
+                <strong>Private and permission-based</strong>
+                <p>Elders control what you can see and manage.</p>
+              </div>
+            </div>
+            <div className="cultural-note">
+              <div className="cultural-icon">🌺</div>
+              <div>
+                <strong>North East India Initiative</strong>
+                <p>
+                  Specially designed for the diverse communities of North East India, respecting local
+                  traditions and languages.
+                </p>
+              </div>
+            </div>
+            <div className="medical-disclaimer">
+              <div className="disclaimer-icon">⚕️</div>
+              <div>
+                <strong>Medical Disclaimer</strong>
+                <p>
+                  This application provides cognitive support activities and is not a substitute for
+                  professional medical diagnosis, treatment, or advice. Always consult qualified
+                  healthcare professionals for medical concerns. Emergency services: Call 104 for health
+                  emergencies.
+                </p>
+              </div>
+            </div>
+          </>
+        )}
       </>
     );
   };

@@ -983,6 +983,527 @@ textarea:focus-visible {
   color: var(--muted-foreground);
   font-size: 0.56em;
 }
+
+/* Modern Dashboard Styles */
+.modern-header {
+  padding: 20px 16px;
+  background: var(--background);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.greeting-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.greeting-label {
+  font-size: 0.75em;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  letter-spacing: 0.5px;
+}
+
+.sun-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--warning-soft);
+  color: var(--warning);
+  display: grid;
+  place-items: center;
+}
+
+.user-greeting h1 {
+  font-size: 1.8em;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+}
+
+.date-text {
+  font-size: 0.85em;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.mood-section {
+  padding: 0 16px 20px;
+}
+
+.mood-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.mood-card h2 {
+  font-size: 1.1em;
+  margin: 0 0 16px 0;
+  font-weight: 700;
+}
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.mood-button {
+  min-height: 80px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mood-button:hover {
+  border-color: var(--primary);
+  background: var(--secondary);
+}
+
+.mood-selected {
+  border-color: var(--primary);
+  background: var(--secondary);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 20%, transparent);
+}
+
+.mood-emoji {
+  font-size: 2em;
+}
+
+.mood-label {
+  font-size: 0.75em;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.activity-section {
+  padding: 0 16px 20px;
+}
+
+.modern-activity-card {
+  border-radius: 16px;
+}
+
+.activity-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Caregiver Dashboard Styles */
+.caregiver-header {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 24px 16px;
+  border-radius: 0 0 24px 24px;
+}
+
+.caregiver-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.caregiver-title {
+  font-size: 0.8em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.caregiver-greeting {
+  font-size: 2em;
+  font-weight: 800;
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat-card {
+  background: color-mix(in oklab, var(--primary-foreground) 15%, transparent);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 1.8em;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.7em;
+  font-weight: 600;
+  opacity: 0.9;
+  display: block;
+}
+
+.alerts-section {
+  padding: 24px 16px;
+}
+
+.alert-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.alert-card.urgent {
+  background: var(--heritage-soft);
+  border-color: var(--destructive);
+}
+
+.alert-card.warning {
+  background: var(--warning-soft);
+  border-color: var(--warning);
+}
+
+.alert-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.alert-icon.urgent {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+}
+
+.alert-icon.warning {
+  background: var(--warning);
+  color: var(--foreground);
+}
+
+.alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.alert-title {
+  font-weight: 700;
+  font-size: 0.95em;
+  margin: 0 0 4px 0;
+}
+
+.alert-message {
+  font-size: 0.8em;
+  color: var(--muted-foreground);
+  margin: 0 0 4px 0;
+}
+
+.alert-time {
+  font-size: 0.7em;
+  color: var(--muted-foreground);
+}
+
+.elders-section {
+  padding: 0 16px 24px;
+}
+
+.elder-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.elder-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 1.2em;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.elder-avatar::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--success);
+  border: 2px solid var(--card);
+  border-radius: 50%;
+}
+
+.elder-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.elder-name {
+  font-weight: 700;
+  font-size: 0.95em;
+  margin: 0 0 4px 0;
+}
+
+.elder-details {
+  font-size: 0.75em;
+  color: var(--muted-foreground);
+  margin: 0 0 6px 0;
+}
+
+.elder-status {
+  display: inline-block;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 0.7em;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.elder-time {
+  font-size: 0.7em;
+  color: var(--muted-foreground);
+}
+
+/* Family Dashboard Styles */
+.family-header {
+  padding: 24px 16px;
+}
+
+.family-title {
+  font-size: 1.8em;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.family-subtitle {
+  font-size: 0.9em;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.call-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--success-soft);
+  color: var(--success);
+  border: none;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.profile-main-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 0 16px 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.profile-avatar-large {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 1.8em;
+  position: relative;
+}
+
+.profile-avatar-large::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 16px;
+  height: 16px;
+  background: var(--success);
+  border: 3px solid var(--card);
+  border-radius: 50%;
+}
+
+.profile-name-section h2 {
+  font-size: 1.4em;
+  font-weight: 800;
+  margin: 0 0 4px 0;
+}
+
+.profile-age {
+  font-size: 0.9em;
+  color: var(--muted-foreground);
+  margin: 0 0 8px 0;
+}
+
+.profile-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8em;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.profile-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8em;
+  color: var(--muted-foreground);
+  margin-top: 4px;
+}
+
+.activity-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background: var(--secondary);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.summary-icon {
+  font-size: 1.5em;
+  margin-bottom: 6px;
+}
+
+.summary-label {
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--muted-foreground);
+  margin: 0 0 4px 0;
+}
+
+.summary-value {
+  font-size: 0.85em;
+  font-weight: 700;
+  margin: 0;
+}
+
+.voice-note-section {
+  background: var(--secondary);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.voice-note-text {
+  flex: 1;
+  font-size: 0.85em;
+  color: var(--foreground);
+}
+
+.send-love-button {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.85em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.schedule-section {
+  padding: 0 16px 24px;
+}
+
+.schedule-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.schedule-item.completed {
+  border-left: 4px solid var(--success);
+}
+
+.schedule-item.upcoming {
+  border-left: 4px solid var(--primary);
+}
+
+.schedule-time {
+  font-size: 0.75em;
+  color: var(--muted-foreground);
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.schedule-title {
+  font-size: 1em;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.schedule-desc {
+  font-size: 0.8em;
+  color: var(--muted-foreground);
+  margin: 0;
+}
 .games-history-row > span {
   flex: 0 0 auto;
   color: var(--success);
