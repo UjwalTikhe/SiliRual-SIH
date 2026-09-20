@@ -3953,6 +3953,7 @@ function MemoriesView() {
   const [story, setStory] = useState("");
   const [memoryPhoto, setMemoryPhoto] = useState<string | undefined>();
   const [message, setMessage] = useState("");
+  const [expandedMemory, setExpandedMemory] = useState<string | null>(null);
 
   const readPhoto = (file: File | undefined, onReady: (photo: string) => void) => {
     if (!file) return;
@@ -3960,8 +3961,8 @@ function MemoriesView() {
       setMessage("Please choose a photo file.");
       return;
     }
-    if (file.size > 1_500_000) {
-      setMessage("Please choose a photo smaller than 1.5 MB so it can stay safely on this device.");
+    if (file.size > 3_000_000) {
+      setMessage("Please choose a photo smaller than 3 MB so it can stay safely on this device.");
       return;
     }
     const reader = new FileReader();
@@ -4012,6 +4013,20 @@ function MemoriesView() {
     setMemoryPhoto(undefined);
     setMessage("Your memory is saved privately on this device.");
   };
+
+  // Family-shared memories (these would come from family members)
+  const familyMemories = [
+    {
+      id: "family-wedding",
+      title: "Our Wedding Day",
+      story: "This beautiful moment from our wedding day brings back so many happy memories. You looked radiant in your traditional red and gold outfit, surrounded by all our family and friends. The ceremony was filled with love, laughter, and blessings from everyone who matters most to us. This day marked the beginning of our beautiful journey together.",
+      photo: "/wedding-memory.jpg",
+      createdAt: new Date("2024-03-15").getTime(),
+      isFamilyShared: true,
+    },
+  ];
+
+  const allMemories = [...familyMemories, ...profile.memories];
 
   return (
     <>
@@ -4076,72 +4091,60 @@ function MemoriesView() {
           </p>
         )}
       </section>
-      <article className="memory-card memory-card-with-photo">
-        <div
-          className="memory-photo"
-          role="img"
-          aria-label="Green hills and a traditional home in North East India"
-        >
-          <img
-            src={northeastWelcome}
-            loading="lazy"
-            width={1200}
-            height={900}
-            alt="Green hills and a traditional home in North East India"
-          />
-          <span>
-            <Check /> Shared with you
-          </span>
-        </div>
-        <div>
-          <p>12 September 2026</p>
-          <h2>Springtime in the hills</h2>
-          <p>
-            We visited this peaceful valley together after the rain. You loved the red flowers by
-            the path.
-          </p>
-          <button
-            onClick={() =>
-              listenToStory(
-                "Springtime in the hills. We visited this peaceful valley together after the rain. You loved the red flowers by the path.",
-              )
-            }
+      <section className="family-memories-section">
+        <h3 className="section-title">Shared with you by family</h3>
+        {allMemories.map((memory) => (
+          <article
+            className={cn(
+              "memory-card",
+              "family-memory-card",
+              memory.photo && "memory-card-with-photo",
+              memory.isFamilyShared && "family-shared-memory"
+            )}
+            key={memory.id}
+            onClick={() => setExpandedMemory(expandedMemory === memory.id ? null : memory.id)}
           >
-            {playing ? <Pause /> : <Volume2 />} {playing ? "Pause" : "Listen to this story"}
-          </button>
-        </div>
-      </article>
-      {profile.memories.map((memory) => (
-        <article
-          className={cn("memory-card", "personal-memory-card", memory.photo && "memory-card-with-photo")}
-          key={memory.id}
-        >
-          {memory.photo && (
-            <div className="memory-photo">
-              <img src={memory.photo} alt={memory.title} />
+            {memory.photo && (
+              <div className="memory-photo">
+                <img src={memory.photo} alt={memory.title} />
+                {memory.isFamilyShared && (
+                  <span className="family-badge">
+                    <Heart /> From family
+                  </span>
+                )}
+              </div>
+            )}
+            <div>
+              <p>
+                {new Date(memory.createdAt).toLocaleDateString(undefined, {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+              <h2>{memory.title}</h2>
+              <p className={cn("memory-story", expandedMemory === memory.id && "expanded")}>
+                {expandedMemory === memory.id ? memory.story : `${memory.story.substring(0, 100)}...`}
+              </p>
+              <div className="memory-actions">
+                <button onClick={(e) => { e.stopPropagation(); listenToStory(`${memory.title}. ${memory.story}`); }}>
+                  {playing ? <Pause /> : <Volume2 />} {playing ? "Pause" : "Listen to this memory"}
+                </button>
+                <button className="expand-button">
+                  {expandedMemory === memory.id ? <ChevronUp /> : <ChevronDown />}
+                  {expandedMemory === memory.id ? "Show less" : "Read more"}
+                </button>
+              </div>
             </div>
-          )}
-          <div>
-            <p>
-              {new Date(memory.createdAt).toLocaleDateString(undefined, {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </p>
-            <h2>{memory.title}</h2>
-            <p>{memory.story}</p>
-            <button onClick={() => listenToStory(`${memory.title}. ${memory.story}`)}>
-              {playing ? <Pause /> : <Volume2 />} {playing ? "Pause" : "Listen to this memory"}
-            </button>
-          </div>
-        </article>
-      ))}
-      {!profile.memories.length && (
+          </article>
+        ))}
+      </section>
+
+      {!allMemories.length && (
         <div className="empty-soft">
           <ImageIcon />
-          <h2>Your personal memories will appear here</h2>
-          <p>Add a photo or a short story above whenever you wish.</p>
+          <h2>Your memories will appear here</h2>
+          <p>Family members can share photos and stories with you here.</p>
         </div>
       )}
     </>
